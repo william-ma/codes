@@ -1,10 +1,5 @@
-# codes
+# Cryptography
 
-## todo
+## Todo
 
-GUI for tap code
-
-Morse code
-
-Frequency... stuff? 
-
+Jest
