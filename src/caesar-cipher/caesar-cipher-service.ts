@@ -10,7 +10,10 @@ class CaesarCipherService {
         }
 
         return plaintext.toLowerCase().split('')
-            .map(c => this.keyMap[((c.charCodeAt(0) - 'a'.charCodeAt(0)) + key) % this.keyMap.length])
+            .map(c => {
+                // TODO ignore 'anything NOT letters'
+                this.keyMap[((c.charCodeAt(0) - 'a'.charCodeAt(0)) + key) % this.keyMap.length]
+            })
             .join('');
     }
 
@@ -32,6 +35,12 @@ class CaesarCipherService {
             .join('');
     }
 
+    public crack(ciphertext: string): any[] {
+        return this.keyMap.map(key => ({
+            'plaintext': this.decrypt(ciphertext, key.charCodeAt(0) - 'a'.charCodeAt(0)),
+            'key': key
+        }));
+    }
 }
 
 export default CaesarCipherService;
