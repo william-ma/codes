@@ -10,10 +10,11 @@ class CaesarCipherService {
         }
 
         return plaintext.toLowerCase().split('')
-            .map(c => {
-                // TODO ignore 'anything NOT letters'
-                this.keyMap[((c.charCodeAt(0) - 'a'.charCodeAt(0)) + key) % this.keyMap.length]
-            })
+            .map(c => (
+                this.isAlphabetLetter(c)
+                    ? this.keyMap[((c.charCodeAt(0) - 'a'.charCodeAt(0)) + key) % this.keyMap.length]
+                    : c
+            ))
             .join('');
     }
 
@@ -26,6 +27,11 @@ class CaesarCipherService {
 
         return ciphertext.toLowerCase().split('')
             .map(c => {
+
+                if (!this.isAlphabetLetter(c)) {
+                    return c;
+                }
+
                 let index: number = c.charCodeAt(0) - 'a'.charCodeAt(0) - key;
                 if (index < 0) {
                     index += this.keyMap.length;
@@ -35,11 +41,31 @@ class CaesarCipherService {
             .join('');
     }
 
-    public crack(ciphertext: string): any[] {
+    public bruteforce(ciphertext: string): { plaintext: string, key: string }[] {
         return this.keyMap.map(key => ({
             'plaintext': this.decrypt(ciphertext, key.charCodeAt(0) - 'a'.charCodeAt(0)),
             'key': key
         }));
+    }
+
+    /**
+     * 
+     * @param ciphertext 
+     * @param plaintext 
+     * @returns the key
+     */
+    public crack(ciphertext: string, plaintext: string): string | null {
+        const key = this.bruteforce(ciphertext).find(value => value.plaintext === plaintext)?.key;
+        if (!key) {
+            console.error("Couldn't find key");
+            return null;
+        }
+
+        return key;
+    }
+
+    private isAlphabetLetter(letter: string): boolean {
+        return letter.charCodeAt(0) >= 'a'.charCodeAt(0) && letter.charCodeAt(0) <= 'z'.charCodeAt(0);
     }
 }
 
