@@ -28,7 +28,7 @@ const caesarCipherService = new CaesarCipherService();
 // console.log(caesarCipherService.decrypt("zyx", 5));
 
 // console.log(caesarCipherService.bruteforce("hufaopun jvumpkluaphs"));
-// console.log(caesarCipherService.bruteforce("Jhlzhy jpwoly: Lujvkl huk kljvkl vuspul"));
+console.log(caesarCipherService.bruteforce("Jhlzhy jpwoly: Lujvkl huk kljvkl vuspul"));
 
 console.log(caesarCipherService.crack("Jhlzhy jpwoly: Lujvkl huk kljvkl vuspul", 'caesar cipher: encode and decode online'));
 // console.log(caesarCipherService.encrypt("a b c d e f g", 1));

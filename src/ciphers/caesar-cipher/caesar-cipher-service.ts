@@ -4,7 +4,7 @@ class CaesarCipherService {
 
     public encrypt(plaintext: string, key: number): string {
 
-        if (key >= this.keyMap.length) {
+        if (key >= this.keyMap.length || key <= -this.keyMap.length) {
             console.error("Invalid key length:", key);
             return '';
         }
@@ -20,7 +20,7 @@ class CaesarCipherService {
 
     public decrypt(ciphertext: string, key: number): string {
 
-        if (key >= this.keyMap.length) {
+        if (key >= this.keyMap.length || key <= -this.keyMap.length) {
             console.error("Invalid key length:", key);
             return '';
         }
@@ -36,16 +36,21 @@ class CaesarCipherService {
                 if (index < 0) {
                     index += this.keyMap.length;
                 }
-                return this.keyMap[index];
+                return this.keyMap[index % this.keyMap.length];
             })
             .join('');
     }
 
-    public bruteforce(ciphertext: string): { plaintext: string, key: string }[] {
-        return this.keyMap.map(key => ({
-            'plaintext': this.decrypt(ciphertext, key.charCodeAt(0) - 'a'.charCodeAt(0)),
-            'key': key
-        }));
+    public bruteforce(ciphertext: string): { plaintext: string, key: number }[] {
+
+        let tries: { plaintext: string, key: number }[] = [];
+        for (let i = -this.keyMap.length + 1; i < this.keyMap.length; i++) {
+            tries.push({
+                plaintext: this.decrypt(ciphertext, i),
+                key: i
+            });
+        }
+        return tries;
     }
 
     /**
@@ -54,7 +59,7 @@ class CaesarCipherService {
      * @param plaintext 
      * @returns the key
      */
-    public crack(ciphertext: string, plaintext: string): string | null {
+    public crack(ciphertext: string, plaintext: string): number | null {
         const key = this.bruteforce(ciphertext).find(value => value.plaintext === plaintext)?.key;
         if (!key) {
             console.error("Couldn't find key");
