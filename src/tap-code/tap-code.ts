@@ -1,5 +1,5 @@
-import { TapCodeDecodeMap, TapCodeEncodeMap } from "./tap-code/tap-code-constants";
-import TapCodeService from "./tap-code/tap-code-service";
+import { TapCodeDecodeMap, TapCodeEncodeMap } from "./tap-code-constants";
+import TapCodeService from "./tap-code-service";
 
 const tapCodeService = new TapCodeService(TapCodeEncodeMap, TapCodeDecodeMap);
 
